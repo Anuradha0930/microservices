@@ -1,0 +1,38 @@
+name: CI CD Deploy to EC2
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Copy application code to EC2 instance
+    - name: Copy files to EC2
+      uses: appleboy/scp-action@v0.1.8
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        source: "./"
+        target: "/home/${{ secrets.EC2_USER }}/microservices/"
+
+    # SSH into EC2 and deploy the application
+    - name: Deploy on EC2
+      uses: appleboy/ssh-action@v0.1.8
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /home/${{ secrets.EC2_USER }}/microservices
+          
+          # Build and start containers
+          docker-compose down
+          docker-compose up -d --build
