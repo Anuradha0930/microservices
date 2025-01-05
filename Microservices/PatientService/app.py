@@ -13,7 +13,7 @@ cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 
 
-#Get API
+#Get API Patient
 @app.route('/GetPatient/<int:patient_id>',methods=["GET"])
 def GetPatient(patient_id):
     sendData = []
