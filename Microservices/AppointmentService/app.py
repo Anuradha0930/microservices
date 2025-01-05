@@ -14,6 +14,10 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 
+#Hello Test
+@app.route('/Hello',methods=["GET"])
+def Hello():
+    return "Hello from Anu"
 
 #Get Appointment
 @app.route('/GetAppointnment/<int:appointment_id>',methods=["GET"])
